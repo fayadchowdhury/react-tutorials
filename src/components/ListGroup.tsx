@@ -6,12 +6,22 @@
 import { Fragment, useState } from "react";
 import { MouseEvent } from "react";
 
-function ListGroup() {
+// Props are a way to pass data and functions from a parent component to a child component
+// Props are passed as attributes in the JSX syntax
+// Props are read-only and cannot be modified by the child component
+interface ListGroupProps {
+  items: string[];
+  header: string;
+  // Custom function
+  onSelectItem: (item: string) => void;
+}
+
+function ListGroup({ items, header, onSelectItem }: ListGroupProps) {
   // class is a reserved keyword in TS/JS; use className instead
   // Example of Fragment
   // Also possible to use empty angle brackets like so <> to avoid importing
 
-  const items: string[] = ["Item 1", "Item 2", "Item 3", "Item 4"];
+  // const items: string[] = ["Item 1", "Item 2", "Item 3", "Item 4"];
 
   // const items: string[] = [];
 
@@ -49,11 +59,12 @@ function ListGroup() {
     console.log(event);
     console.log(item);
     setSelectedIndex(index);
+    onSelectItem(item); // Call the function passed as a prop
   };
 
   return (
     <Fragment>
-      <h1>List</h1>
+      <h1>{header}</h1>
       {/* {message} Same as below */}
       {getMessage()}
       <ul className="list-group">
