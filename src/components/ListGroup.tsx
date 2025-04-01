@@ -3,7 +3,7 @@
 // But this creates and renders a separate div element in the DOM
 // A better way to do this is using Fragment
 
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { MouseEvent } from "react";
 
 function ListGroup() {
@@ -25,7 +25,7 @@ function ListGroup() {
   //   );
   // }
 
-  const message = items.length === 0 ? <p>Empty</p> : null;
+  // const message = items.length === 0 ? <p>Empty</p> : null;
 
   const getMessage = () => {
     // Useful to do functions if we're going to parameterize it somehow
@@ -33,9 +33,22 @@ function ListGroup() {
     return items.length === 0 && <p>Empty</p>; // Equivalent to the above expression
   };
 
-  const handleClick = (event: MouseEvent, item: string) => {
+  // let selectedIndex: number = 0; // With this implementation, the selectedIndex will be reset to 0 every time the component is re-rendered
+  // Furthermore, React cannot track changes to the variable and update the UI accordingly
+  // Use a state variable to keep track of the selected index
+  // We use the useState React hook to create a state variable
+  // The useState function returns an array with two elements: the current state and a function to update it
+  // The useState function takes an initial value as an argument
+  // The initial value is used to set the state variable when the component is first rendered
+  // The state variable is updated using the function returned by useState
+  // The function takes the new value as an argument and updates the state variable
+  // The component is re-rendered with the new state variable
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1); // Use state to keep track of the selected index
+
+  const handleClick = (event: MouseEvent, item: string, index: number) => {
     console.log(event);
     console.log(item);
+    setSelectedIndex(index);
   };
 
   return (
@@ -51,12 +64,16 @@ function ListGroup() {
         <li className="list-group-item">Fifth item</li> */}
         {
           /* Wrap in curly braces to compile and render based on code */
-          items.map((item) => (
+          items.map((item, index) => (
             <li
-              className="list-group-item"
+              className={
+                selectedIndex === index
+                  ? "list-group-item active"
+                  : "list-group-item"
+              }
               key={item}
               // onClick={() => alert(`Clicked ${item}`)}
-              onClick={(event) => handleClick(event, item)}
+              onClick={(event) => handleClick(event, item, index)}
             >
               {item}
             </li> // Important to assign key so that React knows how to update DOM
