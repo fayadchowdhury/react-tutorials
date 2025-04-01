@@ -3,7 +3,7 @@
 // But this creates and renders a separate div element in the DOM
 // A better way to do this is using Fragment
 
-import { Fragment, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { MouseEvent } from "react";
 
 // Props are a way to pass data and functions from a parent component to a child component
@@ -11,12 +11,14 @@ import { MouseEvent } from "react";
 // Props are read-only and cannot be modified by the child component
 interface ListGroupProps {
   items: string[];
-  header: string;
+  // header: string;
+  // It is also possible to pass HTML elements as props via the children prop
+  children: ReactNode;
   // Custom function
   onSelectItem: (item: string) => void;
 }
 
-function ListGroup({ items, header, onSelectItem }: ListGroupProps) {
+function ListGroup({ items, children, onSelectItem }: ListGroupProps) {
   // class is a reserved keyword in TS/JS; use className instead
   // Example of Fragment
   // Also possible to use empty angle brackets like so <> to avoid importing
@@ -64,7 +66,7 @@ function ListGroup({ items, header, onSelectItem }: ListGroupProps) {
 
   return (
     <Fragment>
-      <h1>{header}</h1>
+      {children}
       {/* {message} Same as below */}
       {getMessage()}
       <ul className="list-group">

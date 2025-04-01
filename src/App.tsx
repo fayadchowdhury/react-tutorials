@@ -11,9 +11,15 @@ function App() {
       {/* Update ListGroup to include props (they are destructured)*/}
       <ListGroup
         items={["Item 1", "Item 2", "Item 3", "Item 4"]}
-        header={"Items"}
+        // header={"Items"}
         onSelectItem={handleSelectItem} // Pass handler function as a prop
-      />
+      >
+        {/* Update the ListGroup element to accept a child element */}
+        <div>
+          {/* Any HTML element can be passed in here */}
+          <p>ITEMS</p>
+        </div>
+      </ListGroup>
     </div>
   );
 }
