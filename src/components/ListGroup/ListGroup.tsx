@@ -5,6 +5,8 @@
 
 import { Fragment, ReactNode, useState } from "react";
 import { MouseEvent } from "react";
+// Module-specific CSS scoped to a specific component
+import styles from "./ListGroup.module.css";
 
 // Props are a way to pass data and functions from a parent component to a child component
 // Props are passed as attributes in the JSX syntax
@@ -69,7 +71,8 @@ function ListGroup({ items, children, onSelectItem }: ListGroupProps) {
       {children}
       {/* {message} Same as below */}
       {getMessage()}
-      <ul className="list-group">
+      {/* Add styling from module-specific CSS */}
+      <ul className={styles.listGroup}>
         {/* <li className="list-group-item">First item</li>
         <li className="list-group-item">Second item</li>
         <li className="list-group-item">Third item</li>

@@ -1,24 +1,24 @@
 // import Message from "./Message";
-import { useState } from "react";
+// import { useState } from "react";
 import ListGroup from "./components/ListGroup";
-import Button from "./components/Button";
-import Alert from "./components/Alert";
+// import Button from "./components/Button";
+// import Alert from "./components/Alert";
 
 function App() {
   const handleSelectItem = (item: string) => {
     console.log(item);
   };
 
-  const [alertVisiblity, setAlertVisibility] = useState(false);
+  // const [alertVisiblity, setAlertVisibility] = useState(false);
 
   return (
     <div>
       {/* Update ListGroup to include props (they are destructured)*/}
-      {alertVisiblity && (
+      {/* {alertVisiblity && (
         <Alert onCloseClick={() => setAlertVisibility(false)}>
           <p>ALERT!!!!</p>
         </Alert>
-      )}
+      )} */}
       <ListGroup
         items={["Item 1", "Item 2", "Item 3", "Item 4"]}
         // header={"Items"}
@@ -30,9 +30,9 @@ function App() {
           <p>ITEMS</p>
         </div>
       </ListGroup>
-      <Button color="secondary" onClick={() => setAlertVisibility(true)}>
+      {/* <Button color="secondary" onClick={() => setAlertVisibility(true)}>
         <h1>CLICK ME TO SHOW AN ALERT!</h1>
-      </Button>
+      </Button> */}
     </div>
   );
 }
