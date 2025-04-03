@@ -1,10 +1,25 @@
-import { useRef } from "react";
+// import { useRef } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface FormData {
-  name: string;
-  age: number;
-}
+// To do schema based validation, it is recommended to use Zod
+const schema = z.object({
+  // Chain type and other requirements and optionally pass a custom error message
+  name: z.string().min(3, "Name must be at least 3 characters long"),
+  age: z
+    .number({ invalid_type_error: "Age must be a number" })
+    .min(1, "Age must be greater than 0")
+    .max(120, "Age must be less than 120"),
+});
+
+// Infer a type from the Zod schema
+type FormData = z.infer<typeof schema>;
+
+// interface FormData {
+//   name: string;
+//   age: number;
+// }
 
 const Form = () => {
   // useRef is used to get a reference to a DOM element
@@ -24,7 +39,8 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({ resolver: zodResolver(schema) }); // Use zodResolver to validate the form data against the Zod schema
+  //   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   //   const handleFormSubmit = (event: React.FormEvent) => {
   //     event.preventDefault(); // Prevent the default form submission behavior
@@ -63,20 +79,23 @@ const Form = () => {
         <input
           id="name"
           // Assign custom validation rules to the name input field
-          {...register("name", { required: true, minLength: 3 })}
+          //   {...register("name", { required: true, minLength: 3 })}
+          {...register("name")}
           type="text"
           className="form-control"
         />
-        {/* Display an error message if the name input field is empty */}
+        {/* Throw error message from Zod */}
+        {errors.name && <p className="text-danger">{errors.name.message}</p>}
+        {/* Display an error message if the name input field is empty
         {errors.name?.type === "required" && (
           <p className="text-danger">The name is required</p>
         )}
-        {/* Display an error message if the name is less than 3 characters */}
+        {/* Display an error message if the name is less than 3 characters
         {errors.name?.type === "minLength" && (
           <p className="text-danger">
             The name must be at least 3 characters long
           </p>
-        )}
+        )}*/}
       </div>
       <div className="mb-3">
         <label htmlFor="age" className="form-label">
@@ -86,10 +105,12 @@ const Form = () => {
         {/* Spread the register object and register a new hook named "age" on the age input field */}
         <input
           id="age"
-          {...register("age")}
+          {...register("age", { valueAsNumber: true })} // Use valueAsNumber to convert the input value to a number
           type="number"
           className="form-control"
         />
+        {/* Throw error message from Zod */}
+        {errors.age && <p className="text-danger">{errors.age.message}</p>}
       </div>
       <button className="btn btn-primary" type="submit">
         Submit
