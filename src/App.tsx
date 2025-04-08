@@ -4,6 +4,10 @@ import { useState } from "react";
 // import Info from "./components/Info";
 // import InfoDisplay from "./components/InfoDisplay";
 import Form from "./components/Form";
+import ExpenseList from "./expense-tracker/components/ExpenseList";
+import dummyExpenses from "./expense-tracker/data/dummy-expenses";
+import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
+import ExpenseForm from "./expense-tracker/components/ExpenseForm";
 // import Button from "./components/Button";
 // import Alert from "./components/Alert";
 
@@ -78,7 +82,37 @@ function App() {
   //     </Button> */}
   //   </div>
   // );
-  return <Form />;
+  // return <Form />;
+
+  const [expenses, setExpenses] = useState(dummyExpenses);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const visibleExpenses = selectedCategory
+    ? expenses.filter((e) => e.category === selectedCategory)
+    : expenses; // Already computed, just filter based on state change
+
+  return (
+    <div>
+      <div className="mb-5">
+        <ExpenseForm
+          onSubmitExpenseForm={(expense) =>
+            setExpenses([...expenses, { ...expense, id: expenses.length + 1 }])
+          }
+        />
+      </div>
+      <div className="mb-3">
+        <ExpenseFilter
+          onFilterChange={(category) => setSelectedCategory(category)} // Update the selected category
+        />
+      </div>
+
+      <ExpenseList
+        expenses={visibleExpenses}
+        onDelete={(id) =>
+          setExpenses(visibleExpenses.filter((e) => e.id !== id))
+        } // Filter out the deleted expense
+      />
+    </div>
+  );
 }
 
 export default App;
