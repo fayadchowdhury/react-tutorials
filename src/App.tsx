@@ -1,5 +1,5 @@
 // import Message from "./Message";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import ListGroup from "./components/ListGroup";
 // import Info from "./components/Info";
 // import InfoDisplay from "./components/InfoDisplay";
@@ -8,6 +8,7 @@ import ExpenseList from "./expense-tracker/components/ExpenseList";
 import dummyExpenses from "./expense-tracker/data/dummy-expenses";
 import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
 import ExpenseForm from "./expense-tracker/components/ExpenseForm";
+import ProductList from "./components/ProductList";
 // import Button from "./components/Button";
 // import Alert from "./components/Alert";
 
@@ -84,33 +85,70 @@ function App() {
   // );
   // return <Form />;
 
-  const [expenses, setExpenses] = useState(dummyExpenses);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const visibleExpenses = selectedCategory
-    ? expenses.filter((e) => e.category === selectedCategory)
-    : expenses; // Already computed, just filter based on state change
+  // const [expenses, setExpenses] = useState(dummyExpenses);
+  // const [selectedCategory, setSelectedCategory] = useState("");
+  // const visibleExpenses = selectedCategory
+  //   ? expenses.filter((e) => e.category === selectedCategory)
+  //   : expenses; // Already computed, just filter based on state change
 
+  // return (
+  //   <div>
+  //     <div className="mb-5">
+  //       <ExpenseForm
+  //         onSubmitExpenseForm={(expense) =>
+  //           setExpenses([...expenses, { ...expense, id: expenses.length + 1 }])
+  //         }
+  //       />
+  //     </div>
+  //     <div className="mb-3">
+  //       <ExpenseFilter
+  //         onFilterChange={(category) => setSelectedCategory(category)} // Update the selected category
+  //       />
+  //     </div>
+
+  //     <ExpenseList
+  //       expenses={visibleExpenses}
+  //       onDelete={(id) =>
+  //         setExpenses(visibleExpenses.filter((e) => e.id !== id))
+  //       } // Filter out the deleted expense
+  //     />
+  //   </div>
+  // );
+
+  const ref = useRef<HTMLInputElement>(null);
+
+  // The useEffect hook is used to perform side effects in function components
+  // It can only be called at the top level and not in functions or loops
+  // It takes two arguments: a function and an array of dependencies
+  // The function is executed after the component is rendered
+  // The array of dependencies is used to determine when the function should be executed
+  // If the array is empty, the function is executed only once after the initial render
+  // If the array contains values, the function is executed whenever any of the values change
+  // If the array is not provided, the function is executed after every render
+  // The function can return a cleanup function that is executed before the component is unmounted
+  // useEffect(() => {
+  //   // Side effect - execute a piece of code after a component is rendered
+  //   if (ref.current) {
+  //     ref.current.focus();
+  //   }
+  // });
+
+  const [category, setCategory] = useState("");
   return (
     <div>
-      <div className="mb-5">
-        <ExpenseForm
-          onSubmitExpenseForm={(expense) =>
-            setExpenses([...expenses, { ...expense, id: expenses.length + 1 }])
-          }
-        />
-      </div>
-      <div className="mb-3">
-        <ExpenseFilter
-          onFilterChange={(category) => setSelectedCategory(category)} // Update the selected category
-        />
-      </div>
-
-      <ExpenseList
-        expenses={visibleExpenses}
-        onDelete={(id) =>
-          setExpenses(visibleExpenses.filter((e) => e.id !== id))
-        } // Filter out the deleted expense
-      />
+      {/* <input ref={ref} type="text" className="form-control" /> */}
+      <select
+        id="category"
+        className="form-select"
+        onChange={(event) => {
+          setCategory(event.target.value);
+        }}
+      >
+        <option value=""></option>
+        <option value="Clothing">Clothing</option>
+        <option value="Household">Household</option>
+      </select>
+      <ProductList category={category} />
     </div>
   );
 }
