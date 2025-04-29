@@ -15,7 +15,7 @@ const UsersList = () => {
     const newUsers = users.filter((user) => user.id !== id);
     setUsers(newUsers);
 
-    const request = userService.deleteUserById(id); // Get the request object from the user service
+    const request = userService.deleteEntityById(id); // Get the request object from the user service
 
     request.catch((err) => {
       setError(err.message);
@@ -26,7 +26,7 @@ const UsersList = () => {
   const deleteUserPessimistically = (id: number) => {
     const prevUsers = users;
 
-    const request = userService.deleteUserById(id); // Get the request object from the user service
+    const request = userService.deleteEntityById(id); // Get the request object from the user service
 
     request
       .then((response) => {
@@ -53,7 +53,7 @@ const UsersList = () => {
 
     const prevUsers = users;
 
-    const request = userService.addUser(user); // Get the request object from the user service
+    const request = userService.addEntity(user); // Get the request object from the user service
 
     request
       .then((response) => {
@@ -74,7 +74,7 @@ const UsersList = () => {
     const prevUsers = users;
     const newUser = { ...user, name: user.name + " (updated)" };
 
-    const request = userService.updateUser(newUser); // Get the request object from the user service
+    const request = userService.updateEntity(newUser); // Get the request object from the user service
 
     // Use patch to update certain attributes of an object if backend supports it
     // Put is normally used to delete and recreate an objecyt in the backend
@@ -95,7 +95,7 @@ const UsersList = () => {
   };
 
   useEffect(() => {
-    const { request, cancelRequest } = userService.getAllUsers(); // Get the request object from the user service
+    const { request, cancelRequest } = userService.getAllEntities<User>(); // Get the request object from the user service
 
     request // The signal is used to abort the request if the component unmounts
       .then((response) => {
