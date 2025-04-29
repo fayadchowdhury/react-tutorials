@@ -9,6 +9,7 @@ import dummyExpenses from "./expense-tracker/data/dummy-expenses";
 import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
 import ExpenseForm from "./expense-tracker/components/ExpenseForm";
 import ProductList from "./components/ProductList";
+import UsersList from "./components/UsersList";
 // import Button from "./components/Button";
 // import Alert from "./components/Alert";
 
@@ -137,7 +138,7 @@ function App() {
   return (
     <div>
       {/* <input ref={ref} type="text" className="form-control" /> */}
-      <select
+      {/* <select
         id="category"
         className="form-select"
         onChange={(event) => {
@@ -148,7 +149,8 @@ function App() {
         <option value="Clothing">Clothing</option>
         <option value="Household">Household</option>
       </select>
-      <ProductList category={category} />
+      <ProductList category={category} /> */}
+      <UsersList />
     </div>
   );
 }
