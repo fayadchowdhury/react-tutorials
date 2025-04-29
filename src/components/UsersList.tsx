@@ -2,11 +2,7 @@
 import apiClient, { CanceledError } from "../services/api-client";
 import React, { useEffect, useState } from "react";
 import { set } from "react-hook-form";
-
-interface User {
-  id: number;
-  name: string;
-}
+import userService, { User } from "../services/user-service";
 
 const UsersList = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -19,7 +15,9 @@ const UsersList = () => {
     const newUsers = users.filter((user) => user.id !== id);
     setUsers(newUsers);
 
-    apiClient.delete(`/users/${id}`).catch((err) => {
+    const request = userService.deleteUserById(id); // Get the request object from the user service
+
+    request.catch((err) => {
       setError(err.message);
       setUsers(prevUsers); // Revert the users list back to the original state
     });
@@ -28,8 +26,9 @@ const UsersList = () => {
   const deleteUserPessimistically = (id: number) => {
     const prevUsers = users;
 
-    apiClient
-      .delete(`/users/${id}`)
+    const request = userService.deleteUserById(id); // Get the request object from the user service
+
+    request
       .then((response) => {
         if (response.status === 200) {
           const newUsers = users.filter((user) => user.id !== id);
@@ -54,8 +53,9 @@ const UsersList = () => {
 
     const prevUsers = users;
 
-    apiClient
-      .post("/users", user)
+    const request = userService.addUser(user); // Get the request object from the user service
+
+    request
       .then((response) => {
         if (response.status === 201) {
           setUsers([response.data, ...users]);
@@ -74,10 +74,11 @@ const UsersList = () => {
     const prevUsers = users;
     const newUser = { ...user, name: user.name + " (updated)" };
 
+    const request = userService.updateUser(newUser); // Get the request object from the user service
+
     // Use patch to update certain attributes of an object if backend supports it
     // Put is normally used to delete and recreate an objecyt in the backend
-    apiClient
-      .patch(`/users/${user.id}`, newUser)
+    request
       .then((res) => {
         if (res.status === 200) {
           const newUsers = users.map((u) => (u.id === user.id ? newUser : u));
@@ -94,11 +95,9 @@ const UsersList = () => {
   };
 
   useEffect(() => {
-    const controller = new AbortController();
-    apiClient
-      .get("/users", {
-        signal: controller.signal,
-      }) // The signal is used to abort the request if the component unmounts
+    const { request, cancelRequest } = userService.getAllUsers(); // Get the request object from the user service
+
+    request // The signal is used to abort the request if the component unmounts
       .then((response) => {
         setUsers(response.data);
         setIsLoading(false); // Set loading to false when the data is fetched
@@ -114,7 +113,7 @@ const UsersList = () => {
         setIsLoading(false); // Set loading to false when the request is completed
       }); // This doesn't work in strict mode but this is the correct way to do it
 
-    return () => controller.abort(); // Cleanup function to abort the request if the component unmounts
+    return () => cancelRequest(); // Cleanup function to abort the request if the component unmounts
   }, []);
 
   // Alternative way to do the above with async/await
