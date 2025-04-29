@@ -1,4 +1,5 @@
-import axios, { AxiosError, CanceledError } from "axios";
+// import axios, { AxiosError, CanceledError } from "axios";
+import apiClient, { CanceledError } from "../services/api-client";
 import React, { useEffect, useState } from "react";
 import { set } from "react-hook-form";
 
@@ -18,19 +19,17 @@ const UsersList = () => {
     const newUsers = users.filter((user) => user.id !== id);
     setUsers(newUsers);
 
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${id}`)
-      .catch((err) => {
-        setError(err.message);
-        setUsers(prevUsers); // Revert the users list back to the original state
-      });
+    apiClient.delete(`/users/${id}`).catch((err) => {
+      setError(err.message);
+      setUsers(prevUsers); // Revert the users list back to the original state
+    });
   };
 
   const deleteUserPessimistically = (id: number) => {
     const prevUsers = users;
 
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+    apiClient
+      .delete(`/users/${id}`)
       .then((response) => {
         if (response.status === 200) {
           const newUsers = users.filter((user) => user.id !== id);
@@ -55,8 +54,8 @@ const UsersList = () => {
 
     const prevUsers = users;
 
-    axios
-      .post("https://jsonplaceholder.typicode.com/users", user)
+    apiClient
+      .post("/users", user)
       .then((response) => {
         if (response.status === 201) {
           setUsers([response.data, ...users]);
@@ -77,8 +76,8 @@ const UsersList = () => {
 
     // Use patch to update certain attributes of an object if backend supports it
     // Put is normally used to delete and recreate an objecyt in the backend
-    axios
-      .patch(`https://jsonplaceholder.typicode.com/users/${user.id}`, newUser)
+    apiClient
+      .patch(`/users/${user.id}`, newUser)
       .then((res) => {
         if (res.status === 200) {
           const newUsers = users.map((u) => (u.id === user.id ? newUser : u));
@@ -96,8 +95,8 @@ const UsersList = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    axios
-      .get("https://jsonplaceholder.typicode.com/users", {
+    apiClient
+      .get("/users", {
         signal: controller.signal,
       }) // The signal is used to abort the request if the component unmounts
       .then((response) => {
